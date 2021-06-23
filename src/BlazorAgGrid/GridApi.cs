@@ -1,10 +1,8 @@
-﻿using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
-namespace BlazorAgGrid
+namespace AgGrid.Blazor
 {
     /// <summary>
     /// Strongly-typed access to:
@@ -12,7 +10,7 @@ namespace BlazorAgGrid
     /// </summary>
     public class GridApi
     {
-        internal string CallGridApi = "blazor_ag_grid.gridOptions_callGridApi";
+        internal string CallGridApi = "BlazorAgGrid.gridOptions_callGridApi";
 
         private IJSRuntime _js;
         private string _id;
@@ -54,9 +52,24 @@ namespace BlazorAgGrid
             return CallApi("purgeInfiniteCache");
         }
 
-        public Task SetDatasource(IGridDatasource ds = null)
+        // https://www.ag-grid.com/javascript-grid/grid-api/
+
+        /// <summary>
+        /// Set rows
+        /// </summary>
+        /// <param name="rows">Data of rows</param>
+        public Task SetRowData(IEnumerable<object> rows)
         {
-            return _js.InvokeVoidAsync("blazor_ag_grid.gridOptions_setDatasource", _id, ds).AsTask();
+            return CallApi("setRowData", rows);
+        }
+
+        /// <summary>
+        /// Set new datasource for Infinite Row Model.
+        /// </summary>
+        /// <param name="datasource">New datasource</param>
+        public Task SetDatasource(IGridDatasource datasource = null)
+        {
+            return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setDatasource", _id, datasource).AsTask();
         }
 
         private Task CallApi(string name, params object[] args)

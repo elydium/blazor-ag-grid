@@ -9,11 +9,6 @@ window.example4_fetchData4_configure = function (gridOptions) {
     }
 };
 
-window.example4_fetchData5_albums_configure = function (gridOptions) {
-    gridOptions.getRowNodeId = function (node) {
-        return "" + node.id;
-    }
-};
 window.example4_fetchData5_photos_configure = function (gridOptions) {
     gridOptions.getRowNodeId = function (node) {
         return "ID#" + node.id;

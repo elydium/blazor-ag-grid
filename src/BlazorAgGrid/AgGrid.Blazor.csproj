@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>AgGrid.Blazor</PackageId>
+    <Authors>EBekker, GlazkovAlex</Authors>
+    <PackageTags>Ag-grid Blazor</PackageTags>
+    <RepositoryUrl>https://github.com/glazkovalex/blazor-ag-grid</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Product>AgGrid.Blazor</Product>
+    <Version>0.8.4</Version>
+    <Copyright>Copyright (C) 2021 Eugene Bekker, GlazkovAlex</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Temp\GitHub\glazkovalex\blazor-ag-grid\src\BlazorAgGrid\AgGrid.Blazor.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+</Project>

@@ -35,18 +35,18 @@
 }
 else
 {
-    <AgGrid @ref="photoGrid" WidthStyle="100%" HeightStyle="300px" Options="photoOp" Events="photoEv"
+    <Grid @ref="photoGrid" WidthStyle="100%" HeightStyle="300px" Options="photoOp" Events="photoEv"
             ConfigureScript="example4_fetchData4_configure">
         <GridColumn IsResizable="true" IsSortable="true" Header="ID" Field="id" />
         <GridColumn IsResizable="true" IsSortable="true" Header="Album ID" Field="albumId" />
         <GridColumn IsResizable="true" IsSortable="true" Header="Title" Field="title" />
         <GridColumn IsResizable="true" IsSortable="true" Header="URL" Field="url" />
         <GridColumn IsResizable="true" IsSortable="true" Header="Thumbnail URL" Field="thumbnailUrl" />
-    </AgGrid>
+    </Grid>
 }
 
 @code {
-    private AgGrid photoGrid;
+    private Grid photoGrid;
     private PhotosDataSource dataSource;
     private GridOptions photoOp;
     private GridEvents photoEv;
@@ -64,10 +64,19 @@ else
         {
             Datasource = dataSource,
             EnablePagination = true,
-            EnableRowDeselection = true,
+            SuppressRowDeselection = true,
             RowModelType = RowModelType.Infinite,
             RowSelection = RowSelection.Single,
             SuppressCellSelection = true,
+            LocaleText = new { 
+                to= "в",
+                of = "из",
+                page = "Станица",
+                nextPage = "Следующая страница",
+                lastPage = "Последняя страница",
+                firstPage = "Первая страница",
+                previousPage = "Предыдующая страница"
+            }
         };
         //photoCb = new GridCallbacks
         //{
@@ -85,6 +94,14 @@ else
             {
                 Console.WriteLine("SELECTION HAS CHANGED! " + nodes.Length);
             }),
+            FirstDataRendered = () =>
+            {
+                Console.WriteLine("FirstDataRendered");
+            },
+            GridReady = () =>
+            {
+                Console.WriteLine("GridReady");
+            }
         };
     }
 

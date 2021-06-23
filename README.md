@@ -1,4 +1,4 @@
-# blazor-ag-grid
+# AgGrid.Blazor
 Blazor-wrapped component over [ag-Grid](https://github.com/ag-grid/ag-grid).
 
 :star: I appreciate your star, it helps me decide to which OSS projects I should allocate my spare time.
@@ -6,10 +6,7 @@ Blazor-wrapped component over [ag-Grid](https://github.com/ag-grid/ag-grid).
 Blazor WASM demo can be found [here](https://blog.bkkr.us/blazor-ag-grid).
 
 ----
-
-[![GitHub WorkFlow - CI](https://github.com/ebekker/blazor-ag-grid/workflows/CI/badge.svg)](https://github.com/ebekker/blazor-ag-grid/actions?CI)
-[![GitHub Release Notes (latest by date)](https://img.shields.io/github/v/release/ebekker/blazor-ag-grid?include_prereleases)](https://github.com/ebekker/blazor-ag-grid/releases/latest)
-[![GitHub Preview](https://img.shields.io/badge/github%20nuget-latest%20preview-orange)](https://github.com/ebekker/blazor-ag-grid/packages/112336)
+[![install from nuget](https://img.shields.io/nuget/v/AgGrid.Blazor.svg?style=flat-square)](https://www.nuget.org/packages/AgGrid.Blazor)
 
 <!-- FUTURE when we publish to nuget.org
 [![Nuget  Release](https://img.shields.io/nuget/v/BlazorAgGrid)](https://www.nuget.org/packages/Zyborg.AWS.Lambda.Kerberos/)
@@ -40,11 +37,17 @@ Here is a list of features that are currently supported:
   * Selection notification
 * Paging
 * Sorting
+* Filtering
 * Various tweaks and customizations to the features above such as:
   * page size
   * cell-selection suppression
   * datasource page caching
   * row deselection
+  * [customize](https://github.com/glazkovalex/blazor-ag-grid/blob/master/src/examples/Example3/Pages/FetchData5MultiFetchDS.razor.cs#L57) a cell view using [registered](https://github.com/glazkovalex/blazor-ag-grid/blob/master/src/examples/Example3/wwwroot/Pages/ag-grid-script-config.ts#L4) the CellRenderer
+  * customize a cell editor using registered the CellEditor
+  * customize a row filtering using registered the Filtered
+  * setting styles and classes for columns and rows
+  * customize a cell tooltips
 * Grid and Column APIs
 * local JS script configuration
 * Works with both Blazor WASM and Blazor Server hosting models
@@ -67,31 +70,10 @@ some typical usage under different scenarios:
 
 ## Usage
 
-Firstly, this component is still in very early stage and only being
-published as a nuget in the GitHub Package Repository (GPR).
-
-Add a nuget.config file to your project (e.g. `dotnet new nugetconfig`)
-and edit it to include the package source for this repo:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
-    <clear />
-    <add key="nuget" value="https://api.nuget.org/v3/index.json" />
-    <add key="github" value="https://nuget.pkg.github.com/ebekker/index.json" />
-  </packageSources>
-</configuration>
-```
-
-Note, you must also ***authenticate*** to GPR, more details can be found
-[here](https://help.github.com/en/github/managing-packages-with-github-packages/configuring-dotnet-cli-for-use-with-github-packages).
-
 Then add the nuget to your project:
 
 ```pwsh
-PS> dotnet add package BlazorAgGrid
+PS> dotnet add package AgGrid.Blazor
 ```
 
 ### ag-Grid Assets
@@ -119,7 +101,7 @@ specific to this Blazor component by also adding this to your
 `<head>` section:
 
 ```javascript
-    <script src="_content/BlazorAgGrid/blazor-ag-grid.js"></script>
+    <script src="_content/AgGrid.Blazor/blazor-ag-grid.js"></script>
 ```
 
 Finally, in your Blazor pages, drop in the `<AgGrid>` component
@@ -182,8 +164,7 @@ a custom Datasource.
 The `GridEvents` class defines all supported [Events](https://www.ag-grid.com/javascript-grid-events/)
 of ag-Grid.
 
-This is currently limited to being notified of a change in row
-selection.
+Currently implemented events are [SelectionChanged, RowValueChanged, CellValueChanged, CellClicked, GridReady, and others](https://github.com/glazkovalex/blazor-ag-grid/blob/master/src/BlazorAgGrid/GridEvents.cs).
 
 ### Grid Configuration Script
 
@@ -213,7 +194,8 @@ provide access to the corresponding ag-Grid APIs.
 Currently each of these interfaces only contain a very small
 number of sample API methods to invoke.  Right now these include
 samples for column resizing and purging/refreshing the cache used
-for the `Infinite` row model type.
+for the `Infinite` row model type. And also, SetRowData for the 
+Client-Side Row Model.
 
 ## Blazor Hosting Modes
 

@@ -1,8 +1,8 @@
-window.blazor_ag_grid = {
+window.BlazorAgGrid = {
     callbackMap: {}
     , renderCount: 0
     , createGrid: function (gridDiv, interopOptions, configScript) {
-        //console.log("GOT GridOptions: " + blazor_ag_grid.util_stringify(interopOptions));
+        //console.log("GOT GridOptions: " + BlazorAgGrid.util_stringify(interopOptions));
         var id = interopOptions.CallbackId;
         var op = interopOptions.Options;
         var cb = interopOptions.Callbacks;
@@ -11,19 +11,19 @@ window.blazor_ag_grid = {
         //console.log("JS-creating grid for [" + id + "]...");
 
         // Remember for subsequent API calls
-        blazor_ag_grid.callbackMap[id] = interopOptions;
+        BlazorAgGrid.callbackMap[id] = interopOptions;
 
         if (cb) {
-            blazor_ag_grid.createGrid_wrapCallbacks(op, cb);
+            BlazorAgGrid.createGrid_wrapCallbacks(op, cb);
         }
 
         if (ev) {
-            blazor_ag_grid.createGrid_wrapEvents(op, ev);
+            BlazorAgGrid.createGrid_wrapEvents(op, ev);
         }
 
         if (ds) {
             console.log("DS Ref: " + JSON.stringify(ds));
-            blazor_ag_grid.createGrid_wrapDatasource(op, ds);
+            BlazorAgGrid.createGrid_wrapDatasource(op, ds);
         }
 
         if (configScript) {
@@ -37,19 +37,19 @@ window.blazor_ag_grid = {
         }
 
         // create the grid passing in the div to use together with the columns & data we want to use
-        //console.log("have options(BEF): " + blazor_ag_grid.util_stringify(op));
+        //console.log("have options(BEF): " + BlazorAgGrid.util_stringify(op));
         new agGrid.Grid(gridDiv, op);
-        //console.log("have options(AFT): " + blazor_ag_grid.util_stringify(op));
+        //console.log("have options(AFT): " + BlazorAgGrid.util_stringify(op));
     }
     , destroyGrid: function (gridDiv, id) {
         console.log("JS-destroying grid [" + id + "]...");
 
         // TODO: What else should we do to properly clean up resources???
 
-        delete blazor_ag_grid.callbackMap[id];
+        delete BlazorAgGrid.callbackMap[id];
     }
     , createGrid_wrapDatasource: function (op, ds) {
-        var nativeDS = blazor_ag_grid.util_wrapDatasource(ds);
+        var nativeDS = BlazorAgGrid.util_wrapDatasource(ds);
         op.datasource = nativeDS;
     }
     , createGrid_wrapCallbacks: function (gridOptions, gridCallbacks) {
@@ -78,47 +78,93 @@ window.blazor_ag_grid = {
         if (gridEvents.handlers.SelectionChanged) {
             console.log("Wrapping SelectionChanged handler");
             gridOptions.onSelectionChanged = function () {
-                blazor_ag_grid.gridOptions_onSelectionChanged(gridOptions, gridEvents);
+                BlazorAgGrid.gridOptions_onSelectionChanged(gridOptions, gridEvents);
             }
         }
         if (gridEvents.handlers.CellValueChanged) {
             console.log("Wrapping CellValueChanged handler");
             gridOptions.onCellValueChanged = function (data) {
                 var ev = {
+                    data: data.data,
                     rowNodeId: data.node.id,
                     field: data.colDef.field,
                     columnId: data.column.colId,
                     rowIndex: data.rowIndex,
                     oldValue: data.oldValue,
-                    newValue: data.value,
+                    newValue: data.value
                 };
                 var id = gridEvents.handlers.CellValueChanged.jsRef.invokeMethodAsync("Invoke", ev);
+            }
+        }
+        if (gridEvents.handlers.RowValueChanged) {
+            console.log("Wrapping RowValueChanged handler");
+            gridOptions.onRowValueChanged = function (event) {
+                var ev = {
+                    data: event.data,
+                    rowNodeId: event.node.id,
+                    rowIndex: event.rowIndex,
+                    rowPinned: event.rowPinned,
+                    context: event.context,
+                    event: event.event
+                };
+                var id = gridEvents.handlers.RowValueChanged.jsRef.invokeMethodAsync("Invoke", ev);
+            }
+        }
+        if (gridEvents.handlers.CellClicked) {
+            console.log("Wrapping CellClicked handler");
+            gridOptions.onCellClicked = function (event) {
+                var ev = {
+                    data: event.data,
+                    rowNodeId: event.node.id,
+                    rowIndex: event.rowIndex,
+                    rowPinned: event.rowPinned,
+                    context: event.context,
+                    event: event.event,
+                    //column: event.column,
+                    //colDef: event.colDef,
+                    columnId: event.column.colId,
+                    field: event.colDef.field,
+                    value: event.value
+                };
+                var id = gridEvents.handlers.CellClicked.jsRef.invokeMethodAsync("Invoke", ev);
+            }
+        }
+        if (gridEvents.handlers.FirstDataRendered) {
+            console.log("Wrapping FirstDataRendered handler");
+            gridOptions.onFirstDataRendered = function () {
+                var id = gridEvents.handlers.FirstDataRendered.jsRef.invokeMethodAsync("Invoke");
+            }
+        }
+        if (gridEvents.handlers.GridReady) {
+            console.log("Wrapping GridReady handler");
+            gridOptions.onGridReady = function () {
+                var id = gridEvents.handlers.GridReady.jsRef.invokeMethodAsync("Invoke");
             }
         }
     }
     , gridOptions_callGridApi: function (callbackId, name, args) {
         //console.log("getting gridOptions for [" + callbackId + "]");
-        var gridOptions = blazor_ag_grid.callbackMap[callbackId];
+        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
         //console.log("got gridOptions: " + gridOptions);
         var op = gridOptions.Options;
         var api = op.api;
-        var fn = api[name]
+        var fn = api[name];
         //console.log("has Grid API [" + name + "]: " + fn);
         fn.apply(api, args || []);
     }
     , gridOptions_callColumnApi: function (callbackId, name, args) {
         //console.log("getting gridOptions for [" + callbackId + "]");
-        var gridOptions = blazor_ag_grid.callbackMap[callbackId];
+        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
         //console.log("got gridOptions: " + gridOptions);
         var op = gridOptions.Options;
-        var api = op.columnApi
+        var api = op.columnApi;
         var fn = api[name];
         //console.log("has Column API [" + name + "]: " + fn);
         fn.apply(api, args || []);
     }
     , gridOptions_setDatasource: function (callbackId, ds) {
         //console.log("getting gridOptions for [" + callbackId + "]");
-        var gridOptions = blazor_ag_grid.callbackMap[callbackId];
+        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
         //console.log("got gridOptions: " + gridOptions);
         var op = gridOptions.Options;
         var api = op.api;
@@ -130,31 +176,31 @@ window.blazor_ag_grid = {
         }
         else {
             console.log("Setting DS with NEW DS");
-            var nativeDS = blazor_ag_grid.util_wrapDatasource(ds);
+            var nativeDS = BlazorAgGrid.util_wrapDatasource(ds);
             api.setDatasource(nativeDS);
         }
     }
     , gridOptions_onSelectionChanged: function (gridOptions, gridEvents) {
         console.log("js-onSelectionChanged");
         var selectedNodes = gridOptions.api.getSelectedNodes();
-        var json = blazor_ag_grid.util_stringify(selectedNodes);
+        var json = BlazorAgGrid.util_stringify(selectedNodes);
         var mapped = selectedNodes.map(this.util_mapRowNode);
         console.log("js-selectedNodes: " + JSON.stringify(mapped));
         gridEvents.handlers.SelectionChanged.jsRef.invokeMethodAsync('Invoke', mapped);
     }
     , datasource_successCallback: function (callbackId, rowsThisBlock, lastRow) {
-        var getRowsParams = blazor_ag_grid.callbackMap[callbackId];
+        var getRowsParams = BlazorAgGrid.callbackMap[callbackId];
         console.log("datasource_successCallback: " + callbackId);
         getRowsParams.successCallback(rowsThisBlock, lastRow);
         console.log("unmapping callback: " + callbackId);
-        delete blazor_ag_grid.callbackMap[callbackId];
+        delete BlazorAgGrid.callbackMap[callbackId];
     }
     , datasource_failCallback: function (callbackId, rowsThisBlock, lastRow) {
-        var getRowsParams = blazor_ag_grid.callbackMap[callbackId];
+        var getRowsParams = BlazorAgGrid.callbackMap[callbackId];
         console.log("datasource_failCallback: " + callbackId);
         getRowsParams.failCallback();
         console.log("unmapping callback: " + callbackId);
-        delete blazor_ag_grid.callbackMap[callbackId];
+        delete BlazorAgGrid.callbackMap[callbackId];
     }
     , util_wrapDatasource: function (ds) {
         // Need to "wrap" the data source
@@ -162,8 +208,8 @@ window.blazor_ag_grid = {
         var nativeDS = {
             getRows: function (getRowsParams) {
                 //console.log("getting rows for: " + JSON.stringify(getRowsParams));
-                var callbackId = blazor_ag_grid.util_genId();
-                blazor_ag_grid.callbackMap[callbackId] = getRowsParams;
+                var callbackId = BlazorAgGrid.util_genId();
+                BlazorAgGrid.callbackMap[callbackId] = getRowsParams;
                 getRowsParams.callbackId = callbackId;
                 //console.log("mapped callback ID for ds: " + callbackId + "; " + JSON.stringify(dsRef));
                 ds.invokeMethodAsync('GetRows', getRowsParams);

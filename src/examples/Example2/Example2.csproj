@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.4" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BlazorAgGrid\BlazorAgGrid.csproj" />
+    <ProjectReference Include="..\..\BlazorAgGrid\AgGrid.Blazor.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -29,22 +27,18 @@
      -    https://github.com/dotnet/aspnetcore/issues/19907
      -    https://github.com/dotnet/aspnetcore/issues/19796
     -->
-  <Target Name="PublishGHPages"  AfterTargets="AfterPublish">
+  <Target Name="PublishGHPages" AfterTargets="AfterPublish">
     <Message Importance="high" Text="Publishing output from [$(PublishDir)] to GH Pages directory." />
-    <Copy SourceFiles="@(GHPagesFiles)"
-          DestinationFiles="@(GHPagesFiles->'$(GHPagesRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Move SourceFiles="$(GHPagesRoot)/index.html"
-          DestinationFiles="$(GHPagesRoot)/404.html" />
+    <Copy SourceFiles="@(GHPagesFiles)" DestinationFiles="@(GHPagesFiles->'$(GHPagesRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Move SourceFiles="$(GHPagesRoot)/index.html" DestinationFiles="$(GHPagesRoot)/404.html" />
 
     <PropertyGroup>
       <NoJekyll>
         This file disables Jekyll processing so that we can serve up files with a `_` prefix.
       </NoJekyll>
     </PropertyGroup>
-    <WriteLinesToFile File="$(GHPagesRoot)/.nojekyll" Lines="$(NoJekyll)"
-                      Overwrite="true" />
-    <WriteLinesToFile File="$(GHPagesRoot)/.gitattributes" Lines="* binary"
-                      Overwrite="true" />
+    <WriteLinesToFile File="$(GHPagesRoot)/.nojekyll" Lines="$(NoJekyll)" Overwrite="true" />
+    <WriteLinesToFile File="$(GHPagesRoot)/.gitattributes" Lines="* binary" Overwrite="true" />
     <Message Importance="high" Text="GH Pages published to [$(GHPagesRoot)]" />
   </Target>
 

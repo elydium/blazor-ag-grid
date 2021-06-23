@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Components;
 
-namespace BlazorAgGrid
+namespace AgGrid.Blazor
 {
     public partial class GridColumn : ComponentBase
     {
         [CascadingParameter(Name = nameof(GridOptions.ColumnDefinitions))]
-        public List<ColumnDefinition> ColumnDefinitions { get; set; }
+        public List<ColumnDefinition> ColumnDefinitions { get; set; } = new List<ColumnDefinition>();
         
         [Parameter] public string Field { get; set; }
         [Parameter] public string Header { get; set; }
