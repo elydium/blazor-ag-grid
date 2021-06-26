@@ -52,6 +52,11 @@ namespace AgGrid.Blazor
             return CallApi("purgeInfiniteCache");
         }
 
+        public Task OnFilterChanged()
+        {
+            return CallApi("onFilterChanged");
+        }
+
         // https://www.ag-grid.com/javascript-grid/grid-api/
 
         /// <summary>
@@ -61,6 +66,15 @@ namespace AgGrid.Blazor
         public Task SetRowData(IEnumerable<object> rows)
         {
             return CallApi("setRowData", rows);
+        }
+
+        /// <summary>
+        /// Set column definitions
+        /// </summary>
+        /// <param name="columnDefs">Column definitions</param>
+        public Task SetColumnDefs(IEnumerable<ColumnDefinition> columnDefs)
+        {
+            return CallApi("setColumnDefs", columnDefs);
         }
 
         /// <summary>
