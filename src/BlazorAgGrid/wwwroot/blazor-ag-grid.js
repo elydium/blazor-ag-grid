@@ -146,6 +146,32 @@ window.BlazorAgGrid = {
                 var id = gridEvents.handlers.GridReady.jsRef.invokeMethodAsync("Invoke");
             }
         }
+        if (gridEvents.handlers.CellContextMenu) {
+            console.log("Wrapping CellContextMenu handler");
+            gridOptions.onCellContextMenu = function (event) {
+                var mouseEvent = {
+                    clientX: event.event.clientX,
+                    clientY: event.event.clientY,
+                    pageX: event.event.pageX,
+                    pageY: event.event.pageY
+                };
+
+                var ev = {
+                    data: event.data,
+                    rowNodeId: event.node.id,
+                    rowIndex: event.rowIndex,
+                    rowPinned: event.rowPinned,
+                    context: event.context,
+                    event: mouseEvent,
+                    //column: event.column,
+                    //colDef: event.colDef,
+                    columnId: event.column.colId,
+                    field: event.colDef.field,
+                    value: event.value
+                };
+                var id = gridEvents.handlers.CellContextMenu.jsRef.invokeMethodAsync("Invoke", ev);
+            }
+        }
     }
     , gridOptions_callGridApi: function (callbackId, name, args) {
         //console.log("getting gridOptions for [" + callbackId + "]");

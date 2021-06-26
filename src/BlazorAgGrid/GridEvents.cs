@@ -36,6 +36,11 @@ namespace AgGrid.Blazor
         /// Use this event if, for example, you need to use the grid's API to fix the columns to size.
         /// </summary>
         public Action GridReady { set => Set(value); }
+
+        /// <summary>
+        /// Cell is right-clicked.
+        /// </summary>
+        public Action<CellContextMenuEvent> CellContextMenu { set => Set(value); }
     }
 
     /// <summary>
@@ -61,6 +66,11 @@ namespace AgGrid.Blazor
     /// 
     /// </summary>
     public class CellClickedEvent : CellEvent { }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class CellContextMenuEvent : CellEvent { }
 
     /// <summary>
     /// A cell's value within a row has changed. This event corresponds to Full Row Editing only.
