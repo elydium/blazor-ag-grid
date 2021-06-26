@@ -36,6 +36,11 @@ window.BlazorAgGrid = {
             }
         }
 
+        // register vanilla JS checkbox renderer
+        op.components = {
+            checkboxRenderer: CheckboxRenderer
+        }
+
         // create the grid passing in the div to use together with the columns & data we want to use
         //console.log("have options(BEF): " + BlazorAgGrid.util_stringify(op));
         new agGrid.Grid(gridDiv, op);
@@ -280,3 +285,31 @@ window.BlazorAgGrid = {
         return Math.random().toString(36).substr(2);
     }
 };
+
+// see https://blog.ag-grid.com/binding-boolean-values-to-checkboxes-in-ag-grid/
+function CheckboxRenderer() { }
+
+CheckboxRenderer.prototype.init = function (params) {
+    this.params = params;
+
+    this.eGui = document.createElement('input');
+    this.eGui.type = 'checkbox';
+    this.eGui.checked = params.value === 'True';
+
+    this.checkedHandler = this.checkedHandler.bind(this);
+    this.eGui.addEventListener('click', this.checkedHandler);
+}
+
+CheckboxRenderer.prototype.checkedHandler = function (e) {
+    let checked = e.target.checked;
+    let colId = this.params.column.colId;
+    this.params.node.setDataValue(colId, checked ? 'True' : 'False');
+}
+
+CheckboxRenderer.prototype.getGui = function (params) {
+    return this.eGui;
+}
+
+CheckboxRenderer.prototype.destroy = function (params) {
+    this.eGui.removeEventListener('click', this.checkedHandler);
+}
