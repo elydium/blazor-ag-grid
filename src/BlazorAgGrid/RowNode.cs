@@ -49,8 +49,10 @@
         public bool Stub { get; set; }
         /// The row height in pixels.
         public int RowHeight { get; set; }
+        /// The row index.
+        public int? RowIndex { get; set; }
         /// The row top position in pixels.
-        public int RowTop { get; set; }
+        public int? RowTop { get; set; }
         /// If using quick filter, stores a string representation
         /// of the row for searching against.
         public string QuickFilterAggregateText { get; set; }
