@@ -92,7 +92,7 @@ namespace AgGrid.Blazor
         /// the different pages. See example Custom Pagination Controls.
         public bool? SuppressPaginationPanel { get; set; }
         /// Set to true to have pages split children of groups when Row Grouping or
-        /// detail rows with Master Detail. Pagination & Child Rows
+        /// detail rows with Master Detail. Pagination and Child Rows
         [JsonPropertyName("paginateChildRows")]
         public bool? EnablePaginateChildRows { get; set; }
 

@@ -56,7 +56,9 @@ namespace AgGrid.Blazor
         { 
             public ColumnState[] State { get; set; }
             public bool ApplyOrder { get; set; } = false;
+#nullable enable
             public ColumnState? DefaultState { get; set; }
+#nullable disable
         }
     }
 }
