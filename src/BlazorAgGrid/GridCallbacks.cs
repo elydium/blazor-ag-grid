@@ -12,5 +12,11 @@ namespace AgGrid.Blazor
         public Func<JsonElement, string> GetRowNodeId { set => Set(value); }
 
         public Func<JsonElement, string[]> GetDataPath { set => Set(value); }
+
+        public Func<bool> IsExternalFilterPresent { set => Set(value); }
+
+        public Func<RowNode, bool> DoesExternalFilterPass { set => Set(value); }
+
+        public Func<RowNode, string[]> GetRowClass { set => Set(value); }
     }
 }

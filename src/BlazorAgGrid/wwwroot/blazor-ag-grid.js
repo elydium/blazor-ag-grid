@@ -77,8 +77,40 @@ window.BlazorAgGrid = {
                 return path;
             }
         }
+        if (gridCallbacks.handlers.IsExternalFilterPresent) {
+            //console.log("Wrapping IsExternalFilterPresent handler");
+            gridOptions.isExternalFilterPresent = function () {
+                //console.log("gridOptions.isExternalFilterPresent");
+                var result = gridCallbacks.handlers.IsExternalFilterPresent.jsRef.invokeMethod("Invoke");
+                //console.log("gridOptions.isExternalFilterPresent >>> [" + result + "]");
+                return result;
+            }
+        }
+        if (gridCallbacks.handlers.DoesExternalFilterPass) {
+            //console.log("Wrapping DoesExternalFilterPass handler");
+            gridOptions.doesExternalFilterPass = function (data) {
+                var node = BlazorAgGrid.util_mapRowNode(data); // ensure there are no circular references
+                //console.log("gridOptions.doesExternalFilterPass <<< " + JSON.stringify(node));
+                var result = gridCallbacks.handlers.DoesExternalFilterPass.jsRef.invokeMethod("Invoke", node);
+                //console.log("gridOptions.doesExternalFilterPass >>> [" + result + "]");
+                return result;
+            }
+        }
+        if (gridCallbacks.handlers.GetRowClass) {
+            //console.log("Wrapping GetRowClass handler");
+            gridOptions.getRowClass = function (data) {
+                var node = BlazorAgGrid.util_mapRowNode(data.node); // ensure there are no circular references
+                //console.log("gridOptions.getRowClass <<< " + JSON.stringify(node));
+                var classes = "";
+                setTimeout(function () { gridCallbacks.handlers.GetRowClass.jsRef.invokeMethod("Invoke", node); }, 0) // avoid problems when calling during row rendering by wrapping call with setTimeout()
+                //console.log("gridOptions.getRowClass >>> [" + classes + "]");
+                return classes;
+            }
+        }
     }
-    , createGrid_wrapEvents: function (gridOptions, gridEvents) {
+    ,
+    // see https://www.ag-grid.com/javascript-grid/grid-events/
+    createGrid_wrapEvents: function (gridOptions, gridEvents) {
         console.log("Got GridEvents: " + JSON.stringify(gridEvents));
         if (gridEvents.handlers.SelectionChanged) {
             console.log("Wrapping SelectionChanged handler");

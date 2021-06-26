@@ -17,8 +17,14 @@ namespace AgGrid.Blazor
             _handlers[name] = new EventAction<TInput>(action);
         }
 
+        private void Set<TResult>(Func<TResult> func, 
+            [CallerMemberName] string name = null)
+        {
+            _handlers[name] = new EventFunc<TResult>(func);
+        }
+
         private void Set<TInput, TResult>(Func<TInput, TResult> func,
-                [CallerMemberName]string name = null)
+            [CallerMemberName]string name = null)
         {
             _handlers[name] = new EventFunc<TInput, TResult>(func);
         }
@@ -37,6 +43,22 @@ namespace AgGrid.Blazor
 
             [JSInvokable]
             public void Invoke(TInput input) => _action(input);
+        }
+
+        internal class EventFunc<TResult>
+        {
+            private Func<TResult> _func;
+
+            public EventFunc(Func<TResult> func)
+            {
+                JsRef = DotNetObjectReference.Create(this);
+                _func = func;
+            }
+
+            public DotNetObjectReference<EventFunc<TResult>> JsRef { get; }
+
+            [JSInvokable]
+            public TResult Invoke() => _func();
         }
 
         internal class EventFunc<TInput, TResult>
