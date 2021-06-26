@@ -36,9 +36,27 @@ namespace AgGrid.Blazor
             return CallApi("autoSizeColumns", (object)colKeys);
         }
 
+        public Task ApplyColumnState(ColumnStateParameters colStateParams)
+        {
+            return CallApi("applyColumnState", colStateParams);
+        }
+
         private Task CallApi(string name, params object[] args)
         {
             return _js.InvokeVoidAsync(CallColumnApi, _id, name, args).AsTask();
+        }
+
+        public class ColumnState
+        {
+            public string ColId { get; set; }
+            public bool Hide { get; set; }
+        }
+
+        public class ColumnStateParameters
+        { 
+            public ColumnState[] State { get; set; }
+            public bool ApplyOrder { get; set; } = false;
+            public ColumnState? DefaultState { get; set; }
         }
     }
 }
