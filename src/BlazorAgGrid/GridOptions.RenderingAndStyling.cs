@@ -36,5 +36,9 @@
         /// Default: false
         /// </summary>
         public bool SuppressRowHoverHighlight { get; set; }
+        /// <summary>
+        /// Apply row classes based on row content
+        /// </summary>
+        public object RowClassRules { get; set; }
     }
 }
