@@ -163,7 +163,7 @@ namespace AgGrid.Blazor
         /// <summary>
         /// The previous value is temporarily shown beside the old value with a directional arrow showing increase or decrease in value. The old value is then faded out.
         /// </summary>
-        AgAnimateShowChangeCellRendere,
+        AgAnimateShowChangeCellRenderer,
         /// <summary>
         /// The previous value shown in a faded fashion and slides, giving a ghosting effect as the old value fades and slides away.
         /// </summary>
