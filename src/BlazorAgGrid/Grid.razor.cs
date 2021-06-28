@@ -28,6 +28,7 @@ namespace AgGrid.Blazor
         private string _id = Guid.NewGuid().ToString();
         private bool _isRendered = false;
 
+        [Parameter] public string Id { get; set; } = null;
         [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public string HeightStyle { get; set; } = "500px";
         [Parameter] public string WidthStyle { get; set; } = "500px";
