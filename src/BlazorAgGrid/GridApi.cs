@@ -78,6 +78,38 @@ namespace AgGrid.Blazor
         }
 
         /// <summary>
+        /// Get row data as CSV
+        /// </summary>
+        /// <returns></returns>
+        public Task<string> GetDataAsCsv(GetDataAsCsvParams @params = null)
+        {
+            if (@params == null)
+                return CallApi<string>("getDataAsCsv");
+            else
+                return CallApi<string>("getDataAsCsv", @params);
+        }
+
+        public Task UndoCellEditing()
+        {
+            return CallApi("undoCellEditing");
+        }
+
+        public Task RedoCellEditing()
+        {
+            return CallApi("redoCellEditing");
+        }
+
+        public Task<int> GetCurrentUndoSize()
+        {
+            return CallApi<int>("getCurrentUndoSize");
+        }
+
+        public Task<int> GetCurrentRedoSize()
+        {
+            return CallApi<int>("getCurrentRedoSize");
+        }
+
+        /// <summary>
         /// Set new datasource for Infinite Row Model.
         /// </summary>
         /// <param name="datasource">New datasource</param>
@@ -110,6 +142,14 @@ namespace AgGrid.Blazor
         {
             /// the row nodes to redraw
             public RowNode[] RowNodes { get; set; }
+        }
+
+        public class GetDataAsCsvParams
+        {
+            public char ColumnSeparator { get; set; } = ',';
+            public bool SuppressQuotes { get; set; } = false;
+            public bool SkipColumnHeaders { get; set; } = false;
+            public bool AllColumns { get; set; } = false;
         }
     }
 }
