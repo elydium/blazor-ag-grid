@@ -33,6 +33,16 @@ namespace AgGrid.Blazor
         public bool? SuppressCellSelection { get; set; }
         /// Set to true to enable Range Selection.
         public bool? EnableRangeSelection { get; set; }
+        /// Set to true to enable overwriting adjacent cell contents by dragging bottom right corner
+        public bool? EnableFillHandle { get; set; }
+        /// Set to true to enable range selection
+        public bool? EnableRangeHandle { get; set; }
+        /// Set to true to enable undo/redo
+        public bool? UndoRedoCellEditing { get; set; }
+        /// Set the depth of the undo/redo stack (default is 10)
+        public int? UndoRedoCellEditingLimit { get; set; }
+        /// Set to true to enable highlighting of changed cells
+        public bool? EnableCellChangeFlash { get; set; }
 
         // Editing https://www.ag-grid.com/documentation/javascript/grid-properties/#reference-editing
         [JsonPropertyName("editType")]
