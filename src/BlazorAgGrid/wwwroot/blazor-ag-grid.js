@@ -213,7 +213,7 @@ window.BlazorAgGrid = {
         var api = op.api;
         var fn = api[name];
         //console.log("has Grid API [" + name + "]: " + fn);
-        fn.apply(api, args || []);
+        return fn.apply(api, args || []);
     }
     , gridOptions_callColumnApi: function (callbackId, name, args) {
         //console.log("getting gridOptions for [" + callbackId + "]");

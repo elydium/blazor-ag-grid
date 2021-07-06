@@ -91,6 +91,11 @@ namespace AgGrid.Blazor
             return _js.InvokeVoidAsync(CallGridApi, _id, name, args).AsTask();
         }
 
+        private Task<T> CallApi<T>(string name, params object[] args)
+        {
+            return _js.InvokeAsync<T>(CallGridApi, _id, name, args).AsTask();
+        }
+
         public class RefreshCellsParams
         {
             /// specify rows, or all rows by default
