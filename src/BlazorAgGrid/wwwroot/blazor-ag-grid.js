@@ -243,6 +243,25 @@ window.BlazorAgGrid = {
             api.setDatasource(nativeDS);
         }
     }
+    , gridOptions_setCellValue: function (callbackId, rowIndex, columnId, value) {
+        //console.log("getting gridOptions for [" + callbackId + "]");
+        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
+        //console.log("got gridOptions: " + gridOptions);
+        var op = gridOptions.Options;
+        var api = op.api;
+
+        api.getRowNode(rowIndex).setDataValue(columnId, value);
+    }
+    , gridOptions_getCellValue: function (callbackId, rowIndex, columnId) {
+        //console.log("getting gridOptions for [" + callbackId + "]");
+        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
+        //console.log("got gridOptions: " + gridOptions);
+        var op = gridOptions.Options;
+        var api = op.api;
+
+        var rowNode = api.getRowNode(rowIndex);
+        return api.getValue(columnId, rowNode);
+    }
     , gridOptions_onSelectionChanged: function (gridOptions, gridEvents) {
         console.log("js-onSelectionChanged");
         var selectedNodes = gridOptions.api.getSelectedNodes();

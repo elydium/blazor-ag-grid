@@ -122,6 +122,10 @@ namespace AgGrid.Blazor
         public int? TooltipShowDelay { get; set; }
 
         public bool? TooltipMouseTrack { get; set; }
+
+        public bool? EnterMovesDown { get; set; }
+
+        public bool? EnterMovesDownAfterEdit  { get; set; }
     }
 
     [JsonConverter(typeof(EnumConverter))]

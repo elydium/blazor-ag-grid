@@ -118,6 +118,29 @@ namespace AgGrid.Blazor
             return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setDatasource", _id, datasource).AsTask();
         }
 
+        /// <summary>
+        /// Update the value of an individual cell
+        /// </summary>
+        /// <param name="rowIndex">The numeric row index</param>
+        /// <param name="columnId">The text column id</param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Task SetCellValue(int rowIndex, string columnId, object value)
+        {
+            return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setCellValue", _id, rowIndex, columnId, value).AsTask();
+        }
+
+        /// <summary>
+        /// Retrieve the value of an individual cell
+        /// </summary>
+        /// <param name="rowIndex">The numeric row index</param>
+        /// <param name="columnId">The text column id</param>
+        /// <returns></returns>
+        public Task<object> GetCellValue(int rowIndex, string columnId)
+        {
+            return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_getCellValue", _id, rowIndex, columnId).AsTask();
+        }
+
         private Task CallApi(string name, params object[] args)
         {
             return _js.InvokeVoidAsync(CallGridApi, _id, name, args).AsTask();
