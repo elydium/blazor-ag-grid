@@ -15,7 +15,7 @@ namespace AgGrid.Blazor
         /// <summary>
         /// Value has changed after editing.
         /// </summary>
-        public Action<CellValueChangedDetail> CellValueChanged { set => Set(value); }
+        public Action<CellValueChangedEvent> CellValueChanged { set => Set(value); }
         /// <summary>
         /// A cell's value within a row has changed. This event corresponds to Full Row Editing only.
         /// </summary>
@@ -46,29 +46,20 @@ namespace AgGrid.Blazor
     /// <summary>
     /// Value has changed after editing.
     /// </summary>
-    public class CellValueChangedDetail
+    public class CellValueChangedEvent : CellEvent
     {
-        public dynamic Data { get; set; }
-        public string RowNodeId { get; set; }
+        public dynamic OldValue { get; set; }
 
-        public string Field { get; set; }
-
-        public string ColumnId { get; set; }
-
-        public int RowIndex { get; set; }
-
-        public object OldValue { get; set; }
-
-        public object NewValue { get; set; }
+        public dynamic NewValue { get; set; }
     }
 
     /// <summary>
-    /// 
+    /// Cell is clicked
     /// </summary>
     public class CellClickedEvent : CellEvent { }
 
     /// <summary>
-    /// 
+    /// Cell is right clicked
     /// </summary>
     public class CellContextMenuEvent : CellEvent { }
 
@@ -81,8 +72,8 @@ namespace AgGrid.Blazor
     {
         public dynamic Data { get; set; }
         public string RowNodeId { get; set; }
-        public int RowIndex { get; set; }
-        public string RowPinned { get; set; }
+        public int? RowIndex { get; set; }
+        public string RowPinned { get; set; } // either 'top', 'bottom' or undefined / null (if not pinned)
         public dynamic Context { get; set; }
         public dynamic Event { get; set; }
     }

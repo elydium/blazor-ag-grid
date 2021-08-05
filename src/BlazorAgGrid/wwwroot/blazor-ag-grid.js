@@ -213,7 +213,21 @@ window.BlazorAgGrid = {
         var api = op.api;
         var fn = api[name];
         //console.log("has Grid API [" + name + "]: " + fn);
-        return fn.apply(api, args || []);
+        var result = fn.apply(api, args || []);
+        switch (name) {
+            case "getSelectedRows":
+                return result.map(this.util_mapRowNode);
+            case "getRowNode":
+                return this.util_mapRowNode(result);
+            case "applyTransaction":
+                return {
+                    add: result.add.map(this.util_mapRowNode),
+                    remove: result.remove.map(this.util_mapRowNode),
+                    update: result.update.map(this.util_mapRowNode)
+                }
+            default:
+                return result;
+        }
     }
     , gridOptions_callColumnApi: function (callbackId, name, args) {
         //console.log("getting gridOptions for [" + callbackId + "]");
@@ -243,14 +257,14 @@ window.BlazorAgGrid = {
             api.setDatasource(nativeDS);
         }
     }
-    , gridOptions_setCellValue: function (callbackId, rowIndex, columnId, value) {
+    , gridOptions_setCellValue: function (callbackId, rowNodeId, columnId, value) {
         //console.log("getting gridOptions for [" + callbackId + "]");
         var gridOptions = BlazorAgGrid.callbackMap[callbackId];
         //console.log("got gridOptions: " + gridOptions);
         var op = gridOptions.Options;
         var api = op.api;
 
-        api.getRowNode(rowIndex).setDataValue(columnId, value);
+        api.getRowNode(rowNodeId).setDataValue(columnId, value);
     }
     , gridOptions_getCellValue: function (callbackId, rowIndex, columnId) {
         //console.log("getting gridOptions for [" + callbackId + "]");

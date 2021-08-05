@@ -109,6 +109,21 @@ namespace AgGrid.Blazor
             return CallApi<int>("getCurrentRedoSize");
         }
 
+        public Task<RowNodeTransaction> ApplyTransaction(RowDataTransaction transaction)
+        {
+            return CallApi<RowNodeTransaction>("applyTransaction", transaction);
+        }
+
+        public Task<RowNode[]> GetSelectedRows()
+        {
+            return CallApi<RowNode[]>("getSelectedRows");
+        }
+
+        public Task<RowNode> GetRowNode(string rowNodeId)
+        {
+            return CallApi<RowNode>("getRowNode", rowNodeId);
+        }
+
         /// <summary>
         /// Set new datasource for Infinite Row Model.
         /// </summary>
@@ -125,9 +140,9 @@ namespace AgGrid.Blazor
         /// <param name="columnId">The text column id</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public Task SetCellValue(int rowIndex, string columnId, object value)
+        public Task SetCellValue(string rowNodeId, string columnId, object value)
         {
-            return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setCellValue", _id, rowIndex, columnId, value).AsTask();
+            return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setCellValue", _id, rowNodeId, columnId, value).AsTask();
         }
 
         /// <summary>
@@ -173,6 +188,34 @@ namespace AgGrid.Blazor
             public bool SuppressQuotes { get; set; } = false;
             public bool SkipColumnHeaders { get; set; } = false;
             public bool AllColumns { get; set; } = false;
+        }
+
+        /// <summary>
+        /// The parameters for applying a transaction
+        /// </summary>
+        public class RowDataTransaction
+        {
+            // rows to add
+            public object[] Add { get; set; }
+
+            // index to add rows
+            public int? AddIndex { get; set; }
+
+            // rows to remove
+            public object[] Remove { get; set; }
+
+            // rows to update
+            public object[] Update { get; set; }
+        }
+
+        /// <summary>
+        /// The result of applying a transaction
+        /// </summary>
+        public class RowNodeTransaction
+        {
+            public RowNode[] Add { get; set; }
+            public RowNode[] Remove { get; set; }
+            public RowNode[] Update { get; set; }
         }
     }
 }
