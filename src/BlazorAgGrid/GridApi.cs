@@ -136,7 +136,7 @@ namespace AgGrid.Blazor
         /// <summary>
         /// Update the value of an individual cell
         /// </summary>
-        /// <param name="rowIndex">The numeric row index</param>
+        /// <param name="rowNodeId">The numeric row index</param>
         /// <param name="columnId">The text column id</param>
         /// <param name="value"></param>
         /// <returns></returns>
