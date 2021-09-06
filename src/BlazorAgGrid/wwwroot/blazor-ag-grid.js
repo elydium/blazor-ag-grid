@@ -276,6 +276,20 @@ window.BlazorAgGrid = {
         var rowNode = api.getRowNode(rowIndex);
         return api.getValue(columnId, rowNode);
     }
+    // cell range selection is only available in AG-Grid Enterprise
+    , gridOptions_setSelectedCell: function (callbackId, rowIndex, columnId) {
+        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
+        var op = gridOptions.Options;
+        var api = op.api;
+
+        api.clearRangeSelection();
+        api.addCellRange({
+            rowStartIndex: rowIndex,
+            rowEndIndex: rowIndex,
+            columnStart: columnId,
+            columnEnd: columnId
+        });
+    }
     , gridOptions_onSelectionChanged: function (gridOptions, gridEvents) {
         console.log("js-onSelectionChanged");
         var selectedNodes = gridOptions.api.getSelectedNodes();

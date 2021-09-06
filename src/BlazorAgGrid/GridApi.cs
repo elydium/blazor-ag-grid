@@ -156,6 +156,18 @@ namespace AgGrid.Blazor
             return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_getCellValue", _id, rowIndex, columnId).AsTask();
         }
 
+        /// <summary>
+        /// Select an individual cell
+        /// N.B. Cell range selection is only available in AG-Grid Enterprise
+        /// </summary>
+        /// <param name="rowIndex">The numeric row index</param>
+        /// <param name="columnId">The text column id</param>
+        /// <returns></returns>
+        public Task<object> SetSelectedCell(int rowIndex, string columnId)
+        {
+            return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_setSelectedCell", _id, rowIndex, columnId).AsTask();
+        }
+
         private Task CallApi(string name, params object[] args)
         {
             return _js.InvokeVoidAsync(CallGridApi, _id, name, args).AsTask();
