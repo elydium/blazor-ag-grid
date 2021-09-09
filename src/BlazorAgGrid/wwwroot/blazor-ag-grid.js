@@ -266,14 +266,14 @@ window.BlazorAgGrid = {
 
         api.getRowNode(rowNodeId).setDataValue(columnId, value);
     }
-    , gridOptions_getCellValue: function (callbackId, rowIndex, columnId) {
+    , gridOptions_getCellValue: function (callbackId, rowNodeId, columnId) {
         //console.log("getting gridOptions for [" + callbackId + "]");
         var gridOptions = BlazorAgGrid.callbackMap[callbackId];
         //console.log("got gridOptions: " + gridOptions);
         var op = gridOptions.Options;
         var api = op.api;
 
-        var rowNode = api.getRowNode(rowIndex);
+        var rowNode = api.getRowNode(rowNodeId);
         return api.getValue(columnId, rowNode);
     }
     // cell range selection is only available in AG-Grid Enterprise

@@ -136,7 +136,7 @@ namespace AgGrid.Blazor
         /// <summary>
         /// Update the value of an individual cell
         /// </summary>
-        /// <param name="rowNodeId">The numeric row index</param>
+        /// <param name="rowNodeId">The row node index</param>
         /// <param name="columnId">The text column id</param>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -148,12 +148,12 @@ namespace AgGrid.Blazor
         /// <summary>
         /// Retrieve the value of an individual cell
         /// </summary>
-        /// <param name="rowIndex">The numeric row index</param>
+        /// <param name="rowNodeId">The row node index</param>
         /// <param name="columnId">The text column id</param>
         /// <returns></returns>
-        public Task<object> GetCellValue(int rowIndex, string columnId)
+        public Task<object> GetCellValue(string rowNodeId, string columnId)
         {
-            return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_getCellValue", _id, rowIndex, columnId).AsTask();
+            return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_getCellValue", _id, rowNodeId, columnId).AsTask();
         }
 
         /// <summary>
