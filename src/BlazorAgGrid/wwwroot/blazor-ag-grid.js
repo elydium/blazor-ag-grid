@@ -316,7 +316,7 @@ window.BlazorAgGrid = {
         newN["id"] = n.id;
         newN["data"] = n.data;
         if (n.parent) {
-            newN["parent"] = mapNode(n.parent);
+            newN["parent"] = window.BlazorAgGrid.util_mapRowNode(n.parent);
         }
         newN["level"] = n.level;
         newN["uiLevel"] = n.uiLevel;

@@ -30,6 +30,12 @@
             The field of the tooltip to apply to the cell.
             </summary>
         </member>
+        <member name="P:AgGrid.Blazor.ColumnDefinition.CheckboxSelection">
+            <summary>
+            boolean or Function. Set to true (or return true from function) to render a selection checkbox in the column.
+            Default: false
+            </summary>
+        </member>
         <member name="P:AgGrid.Blazor.ColumnDefinition.HeaderComponent">
             <summary>
             Custom header component to use for this column. https://www.ag-grid.com/documentation/javascript/component-header/#header-component
@@ -125,6 +131,16 @@
             <summary>
             Set to true if no menu should be shown for this column header.
             Default: false
+            </summary>
+        </member>
+        <member name="P:AgGrid.Blazor.ColumnDefinition.HeaderCheckboxSelection">
+            <summary>
+            If true or the callback returns true, a 'select all' checkbox will be put into the header. See Header Checkbox Selection.
+            </summary>
+        </member>
+        <member name="P:AgGrid.Blazor.ColumnDefinition.HeaderCheckboxSelectionFilteredOnly">
+            <summary>
+            If true, the header checkbox selection will only select filtered items. See Select Everything or Just Filtered.
             </summary>
         </member>
         <member name="P:AgGrid.Blazor.ColumnDefinition.AutoHeight">
