@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Configurations>Debug;Release;Staging</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -18,10 +18,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Temp\GitHub\glazkovalex\blazor-ag-grid\src\BlazorAgGrid\AgGrid.Blazor.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Staging|AnyCPU'">
     <DocumentationFile>C:\Temp\GitHub\glazkovalex\blazor-ag-grid\src\BlazorAgGrid\AgGrid.Blazor.xml</DocumentationFile>
   </PropertyGroup>
 
