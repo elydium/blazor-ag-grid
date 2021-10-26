@@ -86,6 +86,10 @@ namespace AgGrid.Blazor
             return CallApi("startEditingCell", @params);
         }
 
+        /// <summary>
+        /// If a cell is editing, it stops the editing. Pass true if you want to cancel the editing (i.e. don't accept changes).
+        /// </summary>
+        /// <param name="cancel">Pass true if you want to cancel the editing (i.e. don't accept changes).</param>
         public Task StopEditing(bool cancel = false)
         {
             return CallApi("stopEditing", cancel);
@@ -108,6 +112,39 @@ namespace AgGrid.Blazor
                 return CallApi("startEditingCell", rowIndex, colKey, floating);
             }
             throw new ArgumentException($"illegal value: \"{floating}\"", nameof(floating));
+        }
+
+        /// <summary>
+        /// Select all rows, regardless of filtering and rows that are not visible due to grouping being enabled and their groups not expanded.
+        /// </summary>
+        public Task SelectAll()
+        {
+            return CallApi("selectAll");
+        }
+
+        /// <summary>
+        /// Clear all row selections, regardless of filtering.
+        /// </summary>
+        public Task DeselectAll()
+        {
+            return CallApi("deselectAll");
+        }
+
+        /// <summary>
+        /// Select all filtered rows.
+        /// </summary>
+        /// <returns></returns>
+        public Task SelectAllFiltered()
+        {
+            return CallApi("selectAllFiltered"); 
+        }
+
+        /// <summary>
+        /// Clear all filtered selections.
+        /// </summary>
+        public Task DeselectAllFiltered()
+        {
+            return CallApi("deselectAllFiltered");
         }
 
         private Task CallApi(string name, params object[] args)

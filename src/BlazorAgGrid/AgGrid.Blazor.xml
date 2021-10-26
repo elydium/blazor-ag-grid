@@ -275,6 +275,12 @@
             </summary>
             <param name="params">Editing parameters.</param>
         </member>
+        <member name="M:AgGrid.Blazor.GridApi.StopEditing(System.Boolean)">
+            <summary>
+            If a cell is editing, it stops the editing. Pass true if you want to cancel the editing (i.e. don't accept changes).
+            </summary>
+            <param name="cancel">Pass true if you want to cancel the editing (i.e. don't accept changes).</param>
+        </member>
         <member name="M:AgGrid.Blazor.GridApi.SetFocusedCell(System.Int64,System.String,System.String)">
             <summary>
             Sets the focus to the specified cell.
@@ -282,6 +288,27 @@
             <param name="rowIndex">row index</param>
             <param name="colKey">col key</param>
             <param name="floating">'top' | 'bottom'</param>
+        </member>
+        <member name="M:AgGrid.Blazor.GridApi.SelectAll">
+            <summary>
+            Select all rows, regardless of filtering and rows that are not visible due to grouping being enabled and their groups not expanded.
+            </summary>
+        </member>
+        <member name="M:AgGrid.Blazor.GridApi.DeselectAll">
+            <summary>
+            Clear all row selections, regardless of filtering.
+            </summary>
+        </member>
+        <member name="M:AgGrid.Blazor.GridApi.SelectAllFiltered">
+            <summary>
+            Select all filtered rows.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AgGrid.Blazor.GridApi.DeselectAllFiltered">
+            <summary>
+            Clear all filtered selections.
+            </summary>
         </member>
         <member name="P:AgGrid.Blazor.GridApi.RefreshCellsParams.RowNodes">
             specify rows, or all rows by default
