@@ -212,6 +212,28 @@ window.BlazorAgGrid = {
         var op = gridOptions.Options;
         var api = op.api;
         var fn = api[name];
+
+        if (name === "setColumnDefs") {
+            // for each kvp in rowCellEditors, set the 
+            // cellEditor and cellEditorParams for the appropriate row
+            // using a custom cellEditorSelector function
+            args[0].forEach(colDef => {
+                if (colDef.rowCellEditors !== null) {
+                    colDef.cellEditorSelector = params => {
+                        var rowCellEditor = params.colDef.rowCellEditors[params.rowIndex];
+
+                        if (rowCellEditor === undefined || parseInt(params.column.colId) >= rowCellEditor.StartColumn)
+                            return undefined;
+                        else
+                            return  {
+                                component: rowCellEditor.cellEditor,
+                                params: rowCellEditor.cellEditorParameters
+                            };
+                    }
+                }
+            });
+        }
+
         //console.log("has Grid API [" + name + "]: " + fn);
         var result = fn.apply(api, args || []);
         switch (name) {

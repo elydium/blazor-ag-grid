@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AgGrid.Blazor
 {
@@ -121,6 +122,10 @@ namespace AgGrid.Blazor
         /// </summary>
         public object CellEditorParams { get; set; }
 
+        // This isn't part of AgGrid, but we use it to dynamically set cell editor components by row (using a JavaScript cellEditorSelector function)
+        // (key = row index, value = cell editor to use together with the parameters that it requires)
+        public Dictionary<int, RowCellEditor> RowCellEditors { get; set; }
+
         /// <summary>
         /// Set to true if no menu should be shown for this column header.
         /// Default: false
@@ -142,6 +147,19 @@ namespace AgGrid.Blazor
         /// </summary>
         public bool SingleClickEdit { get; set; }
     }
+
+    public class RowCellEditor
+    {
+        public CellEditors CellEditor { get; set; }
+        public object CellEditorParameters { get; set; }
+        public int StartColumn { get; set; }
+    }
+
+    public class RowCellEditorSelectParameters
+    {
+        public string[] Values { get; set; }
+    }
+
     /// <summary>
     /// Sorting options
     /// </summary>
