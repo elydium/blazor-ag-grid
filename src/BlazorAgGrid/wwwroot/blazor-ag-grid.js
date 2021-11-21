@@ -225,7 +225,7 @@ window.BlazorAgGrid = {
                         if (rowCellEditor === undefined || parseInt(params.column.colId) >= rowCellEditor.StartColumn)
                             return undefined;
                         else
-                            return  {
+                            return {
                                 component: rowCellEditor.cellEditor,
                                 params: rowCellEditor.cellEditorParameters
                             };
