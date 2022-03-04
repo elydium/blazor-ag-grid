@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
@@ -133,6 +134,106 @@ namespace AgGrid.Blazor
             return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setDatasource", _id, datasource).AsTask();
         }
 
+        /// <summary>
+        /// Editing parameters.
+        /// </summary>
+        public class StartEditingCellParams
+        {
+            /// <summary>
+            /// The row index of the row to start editing.
+            /// </summary>
+            public long RowIndex { get; set; }
+            /// <summary>
+            /// The column key of the column to start editing.
+            /// </summary>
+            public string ColKey { get; set; }
+            /// <summary>
+            ///  Set to 'top' or 'bottom' to started editing a pinned row.
+            /// </summary>
+            public string? RowPinned { get; set; }
+            /// <summary>
+            /// The keyPress that are passed to the cell editor.
+            /// </summary>
+            public long? KeyPress { get; set; }
+            /// <summary>
+            /// The charPress that are passed to the cell editor.
+            /// </summary>
+            public string? CharPress { get; set; }
+        }
+
+        /// <summary>
+        /// Starts editing the provided cell. If another cell is editing, the editing will be stopped in that other cell.
+        /// </summary>
+        /// <param name="params">Editing parameters.</param>
+        public Task StartEditingCell(StartEditingCellParams @params)
+        {
+            if (@params == null)
+            {
+                throw new ArgumentNullException(nameof(@params));
+            }
+            return CallApi("startEditingCell", @params);
+        }
+
+        /// <summary>
+        /// If a cell is editing, it stops the editing. Pass true if you want to cancel the editing (i.e. don't accept changes).
+        /// </summary>
+        /// <param name="cancel">Pass true if you want to cancel the editing (i.e. don't accept changes).</param>
+        public Task StopEditing(bool cancel = false)
+        {
+            return CallApi("stopEditing", cancel);
+        }
+
+        /// <summary>
+        /// Sets the focus to the specified cell.
+        /// </summary>
+        /// <param name="rowIndex">row index</param>
+        /// <param name="colKey">col key</param>
+        /// <param name="floating">'top' | 'bottom'</param>
+        public Task SetFocusedCell(long rowIndex, string colKey, string? floating = null)
+        {
+            if (floating == null)
+            {
+                return CallApi("startEditingCell", rowIndex, colKey);
+            }
+            if (floating == "top" || floating == "bottom")
+            {
+                return CallApi("startEditingCell", rowIndex, colKey, floating);
+            }
+            throw new ArgumentException($"illegal value: \"{floating}\"", nameof(floating));
+        }
+
+        /// <summary>
+        /// Select all rows, regardless of filtering and rows that are not visible due to grouping being enabled and their groups not expanded.
+        /// </summary>
+        public Task SelectAll()
+        {
+            return CallApi("selectAll");
+        }
+
+        /// <summary>
+        /// Clear all row selections, regardless of filtering.
+        /// </summary>
+        public Task DeselectAll()
+        {
+            return CallApi("deselectAll");
+        }
+
+        /// <summary>
+        /// Select all filtered rows.
+        /// </summary>
+        /// <returns></returns>
+        public Task SelectAllFiltered()
+        {
+            return CallApi("selectAllFiltered");
+        }
+
+        /// <summary>
+        /// Clear all filtered selections.
+        /// </summary>
+        public Task DeselectAllFiltered()
+        {
+            return CallApi("deselectAllFiltered");
+        }
         /// <summary>
         /// Update the value of an individual cell
         /// </summary>

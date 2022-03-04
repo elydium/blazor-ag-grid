@@ -61,6 +61,8 @@ namespace Example3.Pages
                         IsSortable = true,
                         CellRenderer = "funcColorCellRenderer",
                         CellRendererParams = new { color = "red" },
+                        CheckboxSelection = true,
+                        HeaderCheckboxSelection = true
                     },
                     new ColumnDefinition
                     {

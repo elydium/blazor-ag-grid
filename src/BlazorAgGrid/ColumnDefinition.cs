@@ -26,8 +26,14 @@ namespace AgGrid.Blazor
         /// The field of the tooltip to apply to the cell.
         /// </summary>
         public string TooltipField { get => string.IsNullOrWhiteSpace(_tooltipField) ? Field : _tooltipField ; set => _tooltipField = value ; }
-
         private string _tooltipField;
+
+        /// <summary>
+        /// boolean or Function. Set to true (or return true from function) to render a selection checkbox in the column.
+        /// Default: false
+        /// </summary>
+        public bool CheckboxSelection { get; set; }
+
         /// <summary>
         /// Custom header component to use for this column. https://www.ag-grid.com/documentation/javascript/component-header/#header-component
         /// </summary>
@@ -64,12 +70,12 @@ namespace AgGrid.Blazor
         /// Set to true to use the default filter. Use the FilterFramework for custom filter. 
         /// </summary>
         [JsonIgnore]
-        public bool? IsFiltered { get => Filtered != null; set { if (value == true) Filtered = true; } }
+        public bool? IsFiltrable { get => Filter != null; set { if (value == true) Filter = true; } }
         /// <summary>
         /// Set standard filter by enum ColumnFilters or set string name custom filter component or set true to use the default filter.
         /// <remarks>https://www.ag-grid.com/documentation/javascript/component-filter/#example-custom-filter</remarks>
         /// </summary>
-        public object Filtered { get; set; }
+        public object Filter { get; set; }
 
         /// <summary>
         /// Custom params to be passed to filter component.
@@ -131,6 +137,14 @@ namespace AgGrid.Blazor
         /// Default: false
         /// </summary>
         public bool SuppressMenu { get; set; }
+        /// <summary>
+        /// If true or the callback returns true, a 'select all' checkbox will be put into the header. See Header Checkbox Selection.
+        /// </summary>
+        public bool HeaderCheckboxSelection { get; set; }
+        /// <summary>
+        /// If true, the header checkbox selection will only select filtered items. See Select Everything or Just Filtered.
+        /// </summary>
+        public bool HeaderCheckboxSelectionFilteredOnly { get; set; }
         /// <summary>
         /// Set to true to have the grid calculate the height of a row based on contents of this column.
         /// Default: false
