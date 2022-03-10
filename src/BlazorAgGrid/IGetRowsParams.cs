@@ -3,8 +3,7 @@
 namespace AgGrid.Blazor
 {
     /// <summary>
-    /// Params for <see cref="IDatasource.GetRows()">Infinite Scrolling Datasource</see>, based on:
-    ///   https://www.ag-grid.com/javascript-grid-infinite-scrolling/#datasource-interface
+    /// Params for Infinite Scrolling Datasource, based on https://www.ag-grid.com/javascript-grid-infinite-scrolling/#datasource-interface
     /// </summary>
     public interface IGetRowsParams
     {

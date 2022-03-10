@@ -150,7 +150,7 @@ namespace AgGrid.Blazor
             /// <summary>
             ///  Set to 'top' or 'bottom' to started editing a pinned row.
             /// </summary>
-            public string? RowPinned { get; set; }
+            public string RowPinned { get; set; }
             /// <summary>
             /// The keyPress that are passed to the cell editor.
             /// </summary>
@@ -158,7 +158,7 @@ namespace AgGrid.Blazor
             /// <summary>
             /// The charPress that are passed to the cell editor.
             /// </summary>
-            public string? CharPress { get; set; }
+            public string CharPress { get; set; }
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace AgGrid.Blazor
         /// <param name="rowIndex">row index</param>
         /// <param name="colKey">col key</param>
         /// <param name="floating">'top' | 'bottom'</param>
-        public Task SetFocusedCell(long rowIndex, string colKey, string? floating = null)
+        public Task SetFocusedCell(long rowIndex, string colKey, string floating = null)
         {
             if (floating == null)
             {
