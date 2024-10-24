@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using static AgGrid.Blazor.GridColumnApi;
 
 namespace AgGrid.Blazor
 {
@@ -76,6 +77,16 @@ namespace AgGrid.Blazor
         public Task SetColumnDefs(IEnumerable<ColumnDefinition> columnDefs)
         {
             return CallApi("setColumnDefs", columnDefs);
+        }
+
+        /// <summary>
+        /// Apply column state
+        /// </summary>
+        /// <param name="colStateParams"></param>
+        /// <returns></returns>
+        public Task ApplyColumnState(ColumnStateParameters colStateParams)
+        {
+            return CallApi("applyColumnState", colStateParams);
         }
 
         /// <summary>

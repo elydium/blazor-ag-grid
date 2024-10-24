@@ -30,7 +30,7 @@ namespace AgGrid.Blazor
         public bool? SuppressRowClickSelection { get; set; }
         /// If true, cells won't be selectable. This means cells will
         /// not get keyboard focus when you click on them.
-        public bool? SuppressCellSelection { get; set; }
+        //public bool? SuppressCellSelection { get; set; } // 2024-08-02 - no longer available in ag-grid
         /// Set to true to enable Range Selection.
         public bool? EnableRangeSelection { get; set; }
         /// Set to true to enable overwriting adjacent cell contents by dragging bottom right corner
@@ -67,18 +67,30 @@ namespace AgGrid.Blazor
         /// Set to true to always show the vertical scrollbar.
         /// Default: false
         /// </summary>
-        public bool AlwaysShowVerticalScroll { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? AlwaysShowVerticalScroll { get; set; }
+
         /// <summary>
         /// Set to true to debounce the vertical scrollbar. Can provide smoother scrolling on older browsers, eg IE.
         /// Default: false
         /// </summary>
-        public bool DebounceVerticalScrollbar { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? DebounceVerticalScrollbar { get; set; }
+
+        /// <summary>
+        /// Set to true to always show the horizontal scrollbar.
+        /// Default: false
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? AlwaysShowHorizontalScroll { get; set; }
+
         /// <summary>
         /// Set to true to never show the horizontal scroll. This is useful if the grid is aligned with another
         /// grid and will scroll when the other grid scrolls. See Aligned Grid as Footer.
         /// Default: false
         /// </summary>
-        public bool SuppressHorizontalScroll { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? SuppressHorizontalScroll { get; set; }
 
         // Pagination https://www.ag-grid.com/javascript-grid-properties/#pagination
 
@@ -123,9 +135,9 @@ namespace AgGrid.Blazor
 
         public bool? TooltipMouseTrack { get; set; }
 
-        public bool? EnterMovesDown { get; set; }
+        public bool? EnterNavigatesVertically { get; set; } // 2024-08-02 renamed from EnterMovesDown
 
-        public bool? EnterMovesDownAfterEdit  { get; set; }
+        public bool? EnterNavigatesVerticallyAfterEdit  { get; set; } // 2024-08-02 renamed from EnterMovesDownAfterEdit
     }
 
     [JsonConverter(typeof(EnumConverter))]

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
 namespace AgGrid.Blazor
@@ -46,19 +47,69 @@ namespace AgGrid.Blazor
             return _js.InvokeVoidAsync(CallColumnApi, _id, name, args).AsTask();
         }
 
-        public class ColumnState
+        public class DefaultColumnState
         {
+            // True if the column is hidden 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public bool? Hide { get; set; }
+
+            // Width of the column in pixels 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public double? Width { get; set; }
+
+            // Column's flex if flex is set
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public double? Flex { get; set; }
+
+            // Sort applied to the column 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public string Sort { get; set; } // 'asc' or 'desc' or null;
+
+            // The order of the sort, if sorting by many columns 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public int? SortIndex { get; set; }
+
+            // The aggregation function applied 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public string AggFunc { get; set; }
+
+            // True if pivot active 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] 
+            public bool? Pivot { get; set; }
+
+            // The order of the pivot, if pivoting by many columns 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public int? PivotIndex { get; set; }
+
+            // Set if column is pinned
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public bool? Pinned { get; set; }
+
+            // True if row group active 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public bool? RowGroup { get; set; }
+
+            // The order of the row group, if grouping by many columns 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public int? RowGroupIndex { get; set; }
+        }
+
+        public class ColumnState : DefaultColumnState
+        {
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public string ColId { get; set; }
-            public bool Hide { get; set; }
         }
 
         public class ColumnStateParameters
-        { 
+        {
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public ColumnState[] State { get; set; }
-            public bool ApplyOrder { get; set; } = false;
-#nullable enable
-            public ColumnState? DefaultState { get; set; }
-#nullable disable
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public bool? ApplyOrder { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public DefaultColumnState DefaultState { get; set; }
         }
     }
 }

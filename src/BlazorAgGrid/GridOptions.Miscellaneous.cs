@@ -31,7 +31,7 @@ namespace AgGrid.Blazor
         /// <summary>
         /// A list of grids to treat as Aligned Grids. If grids are aligned then the columns and horizontal scrolling will be kept in sync.
         /// </summary>
-        public bool AlignedGrids { get; set; }
+        public object[] AlignedGrids { get; set; }
         /// <summary>
         /// Set to true to not show context menu. Use if you don't want to use the default 'right click' context menu.
         /// Default: false

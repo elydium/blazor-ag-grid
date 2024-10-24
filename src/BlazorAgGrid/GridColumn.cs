@@ -14,6 +14,7 @@ namespace AgGrid.Blazor
         [Parameter] public bool IsSortable { get; set; }
         [Parameter] public bool IsFiltered { get; set; }
         [Parameter] public bool IsEditable { get; set; }
+        [Parameter] public bool Pinned { get; set; }
 
         protected override void OnInitialized()
         {
@@ -25,6 +26,7 @@ namespace AgGrid.Blazor
                 IsSortable = IsSortable,
                 IsFiltrable = IsFiltered,
                 IsEditable = IsEditable,
+                Pinned = Pinned
             }); ;
         }
     }

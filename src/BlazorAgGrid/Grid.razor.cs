@@ -11,7 +11,7 @@ namespace AgGrid.Blazor
     {
         private static readonly JsonSerializerOptions AgGridJsonSerOptions = new JsonSerializerOptions
         {
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
 

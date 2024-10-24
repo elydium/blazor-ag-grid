@@ -130,13 +130,14 @@ namespace AgGrid.Blazor
 
         // This isn't part of AgGrid, but we use it to dynamically set cell editor components by row (using a JavaScript cellEditorSelector function)
         // (key = row index, value = cell editor to use together with the parameters that it requires)
+        [JsonIgnore]
         public Dictionary<int, RowCellEditor> RowCellEditors { get; set; }
 
         /// <summary>
         /// Set to true if no menu should be shown for this column header.
         /// Default: false
         /// </summary>
-        public bool SuppressMenu { get; set; }
+        public bool SuppressHeaderMenuButton { get; set; } // was SuppressMenu
         /// <summary>
         /// If true or the callback returns true, a 'select all' checkbox will be put into the header. See Header Checkbox Selection.
         /// </summary>
@@ -160,6 +161,14 @@ namespace AgGrid.Blazor
         /// Default: false
         /// </summary>
         public bool SingleClickEdit { get; set; }
+
+        public bool EnableCellChangeFlash { get; set; }
+
+        public bool? Pinned { get; set; }
+
+        //public bool InitialPinned { get; set; }
+
+        public bool LockPinned { get; set; }
     }
 
     public class RowCellEditor

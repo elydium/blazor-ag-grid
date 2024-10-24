@@ -39,7 +39,7 @@ namespace AgGrid.Blazor
             // Clone the existing options with some changes for our purposes
             var newOpts = new JsonSerializerOptions
             {
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 
                 // The following are all copied as-is
                 AllowTrailingCommas = options.AllowTrailingCommas,

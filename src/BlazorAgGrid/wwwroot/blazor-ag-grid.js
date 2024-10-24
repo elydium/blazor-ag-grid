@@ -1,6 +1,7 @@
 window.BlazorAgGrid = {
     callbackMap: {}
     , renderCount: 0
+    , gridApi: null
     , createGrid: function (gridDiv, interopOptions, configScript) {
         //console.log("GOT GridOptions: " + BlazorAgGrid.util_stringify(interopOptions));
         var id = interopOptions.CallbackId;
@@ -43,7 +44,8 @@ window.BlazorAgGrid = {
 
         // create the grid passing in the div to use together with the columns & data we want to use
         //console.log("have options(BEF): " + BlazorAgGrid.util_stringify(op));
-        new agGrid.Grid(gridDiv, op);
+        //new agGrid.Grid(gridDiv, op);
+        gridApi = agGrid.createGrid(gridDiv, op);
         //console.log("have options(AFT): " + BlazorAgGrid.util_stringify(op));
     }
     , destroyGrid: function (gridDiv, id) {
@@ -274,19 +276,13 @@ window.BlazorAgGrid = {
         }
     }
     , gridOptions_callGridApi: function (callbackId, name, args) {
-        //console.log("getting gridOptions for [" + callbackId + "]");
-        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
-        //console.log("got gridOptions: " + gridOptions);
-        var op = gridOptions.Options;
-        var api = op.api;
-        var fn = api[name];
-
+        // some functions require additional pre-processing
         if (name === "setColumnDefs") {
             // for each kvp in rowCellEditors, set the 
             // cellEditor and cellEditorParams for the appropriate row
             // using a custom cellEditorSelector function
             args[0].forEach(colDef => {
-                if (colDef.rowCellEditors !== null) {
+                if (typeof colDef.rowCellEditors !== 'undefined') {
                     colDef.cellEditorSelector = params => {
                         var rowCellEditor = params.colDef.rowCellEditors[params.rowIndex];
 
@@ -298,12 +294,24 @@ window.BlazorAgGrid = {
                                 params: rowCellEditor.cellEditorParameters
                             };
                     }
+
+                    delete colDef.rowCellEditors;
                 }
             });
+
+            // following update to ag-grid v32, we need to update the grid options directly
+            gridApi.setGridOption("columnDefs", args[0]);
+            return;
+        }
+        else if (name === "setRowData") {
+            // following update to ag-grid v32, we need to update the grid options directly
+            gridApi.setGridOption("rowData", args[0]);
+            return;
         }
 
-        //console.log("has Grid API [" + name + "]: " + fn);
-        var result = fn.apply(api, args || []);
+        var fn = gridApi[name];
+        var result = fn.apply(gridApi, args || []);
+
         switch (name) {
             case "getSelectedRows":
                 return result.map(this.util_mapRowNode);
@@ -348,23 +356,11 @@ window.BlazorAgGrid = {
         }
     }
     , gridOptions_setCellValue: function (callbackId, rowNodeId, columnId, value) {
-        //console.log("getting gridOptions for [" + callbackId + "]");
-        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
-        //console.log("got gridOptions: " + gridOptions);
-        var op = gridOptions.Options;
-        var api = op.api;
-
-        api.getRowNode(rowNodeId).setDataValue(columnId, value);
+        gridApi.getRowNode(rowNodeId).setDataValue(columnId, value);
     }
     , gridOptions_getCellValue: function (callbackId, rowNodeId, columnId) {
-        //console.log("getting gridOptions for [" + callbackId + "]");
-        var gridOptions = BlazorAgGrid.callbackMap[callbackId];
-        //console.log("got gridOptions: " + gridOptions);
-        var op = gridOptions.Options;
-        var api = op.api;
-
-        var rowNode = api.getRowNode(rowNodeId);
-        return api.getValue(columnId, rowNode);
+        var rowNode = gridApi.getRowNode(rowNodeId);
+        return gridApi.getValue(columnId, rowNode);
     }
     // cell range selection is only available in AG-Grid Enterprise
     , gridOptions_setSelectedCell: function (callbackId, rowIndex, columnId) {
@@ -382,8 +378,8 @@ window.BlazorAgGrid = {
     }
     , gridOptions_onSelectionChanged: function (gridOptions, gridEvents) {
         console.log("js-onSelectionChanged");
-        var selectedNodes = gridOptions.api.getSelectedNodes();
-        var json = BlazorAgGrid.util_stringify(selectedNodes);
+        var selectedNodes = gridApi.getSelectedNodes();
+        //var json = BlazorAgGrid.util_stringify(selectedNodes);
         var mapped = selectedNodes.map(this.util_mapRowNode);
         console.log("js-selectedNodes: " + JSON.stringify(mapped));
         gridEvents.handlers.SelectionChanged.jsRef.invokeMethodAsync('Invoke', mapped);
