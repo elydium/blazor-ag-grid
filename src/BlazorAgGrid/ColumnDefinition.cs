@@ -130,8 +130,13 @@ namespace AgGrid.Blazor
 
         // This isn't part of AgGrid, but we use it to dynamically set cell editor components by row (using a JavaScript cellEditorSelector function)
         // (key = row index, value = cell editor to use together with the parameters that it requires)
-        [JsonIgnore]
-        public Dictionary<int, RowCellEditor> RowCellEditors { get; set; }
+        //[JsonIgnore]
+        //public Dictionary<int, RowCellEditor> RowCellEditors { get; set; }
+        
+        /// <summary>
+        /// Context allows us to set arbitrary application data within a column definition
+        /// </summary>
+        public Context Context { get; set; }
 
         /// <summary>
         /// Set to true if no menu should be shown for this column header.
@@ -169,13 +174,31 @@ namespace AgGrid.Blazor
         //public bool InitialPinned { get; set; }
 
         public bool LockPinned { get; set; }
+
+        public string CellDataType { get; set; } = "text";
+    }
+
+    /// <summary>
+    /// This isn't part of AgGrid, but we use it to dynamically set cell renderer and editor components by row (using JavaScript cellRendererSelector and cellEditorSelector functions)
+    /// In each case the dictionary { key = row index, value = cell renderer/editor to use together with the parameters that it requires }
+    /// </summary>
+    public class Context
+    {
+        public Dictionary<int, RowCellRenderer> RowCellRenderers { get; set; }
+
+        public Dictionary<int, RowCellEditor> RowCellEditors { get; set; }
+    }
+
+    public class RowCellRenderer
+    {
+        public CellRenderers CellRenderer { get; set; }
+        public object CellRendererParameters { get; set; }
     }
 
     public class RowCellEditor
     {
         public CellEditors CellEditor { get; set; }
         public object CellEditorParameters { get; set; }
-        public int StartColumn { get; set; }
     }
 
     public class RowCellEditorSelectParameters
@@ -202,21 +225,40 @@ namespace AgGrid.Blazor
     public enum CellRenderers
     {
         /// <summary>
+        /// Render as a checkbox.
+        /// </summary>
+        AgCheckboxCellRenderer,
+
+        /// <summary>
         /// The previous value is temporarily shown beside the old value with a directional arrow showing increase or decrease in value. The old value is then faded out.
         /// </summary>
         AgAnimateShowChangeCellRenderer,
+
         /// <summary>
         /// The previous value shown in a faded fashion and slides, giving a ghosting effect as the old value fades and slides away.
         /// </summary>
         AgAnimateSlideCellRenderer,
+
         /// <summary>
-        ///  (ag-Grid Enterprise only): Group Cell Renderer
+        ///  (ag-Grid Enterprise only): Group Cell Renderer.
         /// </summary>
         AgGroupCellRenderer,
+
         /// <summary>
         /// (ag-Grid Enterprise only) Cell editor for loading row when using Enterprise row model.
         /// </summary>
-        AgLoadingCellRenderer
+        AgLoadingCellRenderer,
+
+        /// <summary>
+        /// Custom checkbox renderer that accepts "True" and "False" strings.
+        /// </summary>
+        StringCheckboxCellRenderer,
+
+        /// <summary>
+        /// Combined checkbox renderer/editor that accepts "True" and "False" strings.
+        /// Supports read-only operation via a parameter { IsReadOnly == true }. 
+        /// </summary>
+        StringCheckboxCellCombinedRendererEditor
     }
 
     /// <summary>
@@ -226,29 +268,49 @@ namespace AgGrid.Blazor
     public enum CellEditors
     {
         /// <summary>
-        /// Simple text editor that uses a standard HTML input. This is the default.
+        /// Simple editor that uses a standard HTML input. This is the default.
         /// </summary>
         AgTextCellEditor,
+
         /// <summary>
-        /// Same as 'text' but as popup.
-        /// </summary>
-        AgPopupTextCellEditor,
-        /// <summary>
-        /// A text popup for inputting larger, multi-line text.
+        /// Simple editor that uses a standard HTML textarea.
         /// </summary>
         AgLargeTextCellEditor,
+
+        /// <summary>
+        /// Simple number editor that uses the standard HTML number input.
+        /// </summary>
+        AgNumberCellEditor,
+
+        /// <summary>
+        /// A simple date editor that uses the standard HTML date input and requires cell values to be of type Date.
+        /// </summary>
+        AgDateCellEditor,
+
+        /// <summary>
+        /// A simple date editor that uses the standard HTML date input. It's similar to the Date Cell Editor, but works off of cell values with type String.
+        /// </summary>
+        AgDateStringCellEditor,
+
+        /// <summary>
+        /// Simple boolean editor that uses the standard HTML checkbox input.
+        /// </summary>
+        AgCheckboxCellEditor,
+
         /// <summary>
         /// Simple editor that uses a standard HTML select.
         /// </summary>
         AgSelectCellEditor,
+
         /// <summary>
-        /// Same as 'select' but as popup.
-        /// </summary>
-        AgPopupSelectCellEditor,
-        /// <summary>
-        /// (ag-Grid Enterprise only): A rich select popup that uses row virtualisation.
+        /// (ag-Grid Enterprise only): An alternative to using the browser's select popup for dropdowns inside the grid.
         /// </summary>
         AgRichSelectCellEditor,
+
+        /// <summary>
+        /// Custom checkbox editor that accepts and returns "True" and "False" strings.
+        /// </summary>
+        StringCheckboxCellEditor,
     }
 
     /// <summary>

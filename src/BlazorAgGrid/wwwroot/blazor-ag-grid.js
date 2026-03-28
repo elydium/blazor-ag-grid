@@ -37,9 +37,12 @@ window.BlazorAgGrid = {
             }
         }
 
-        // register vanilla JS checkbox renderer
+        // register custom renderers and editors, so that we can reference them by name
         op.components = {
-            checkboxRenderer: CheckboxRenderer
+            stringCheckboxCellEditor: StringCheckboxCellEditor,
+            stringCheckboxCellRenderer: StringCheckboxCellRenderer,
+            stringCheckboxCellCombinedRendererEditor: StringCheckboxCellCombinedRendererEditor
+            //selectRenderer: InteractiveSelectRenderer
         }
 
         // create the grid passing in the div to use together with the columns & data we want to use
@@ -278,24 +281,39 @@ window.BlazorAgGrid = {
     , gridOptions_callGridApi: function (callbackId, name, args) {
         // some functions require additional pre-processing
         if (name === "setColumnDefs") {
-            // for each kvp in rowCellEditors, set the 
-            // cellEditor and cellEditorParams for the appropriate row
-            // using a custom cellEditorSelector function
+            // for each kvp in rowCellRenderers and rowCellEditors, set the
+            // component and parameters using a custom cellRendererSelector/cellEditorSelector function
             args[0].forEach(colDef => {
-                if (typeof colDef.rowCellEditors !== 'undefined') {
-                    colDef.cellEditorSelector = params => {
-                        var rowCellEditor = params.colDef.rowCellEditors[params.rowIndex];
+                if (typeof colDef.context.rowCellRenderers !== 'undefined' && colDef.context.rowCellRenderers !== null) {
+                    colDef.cellRendererSelector = params => {
+                        var rowCellRenderer = params.colDef.context.rowCellRenderers[params.node.rowIndex];
 
-                        if (rowCellEditor === undefined || parseInt(params.column.colId) >= rowCellEditor.StartColumn)
-                            return undefined;
+                        if (rowCellRenderer === undefined || rowCellRenderer === null)
+                            return {
+                                component: null // this defaults to a basic string renderer
+                            };
+                        else
+                            return {
+                                component: rowCellRenderer.cellRenderer,
+                                params: rowCellRenderer.cellRendererParameters
+                            };
+                    }
+                }
+
+                if (typeof colDef.context.rowCellEditors !== 'undefined' && colDef.context.rowCellEditors !== null) {
+                    colDef.cellEditorSelector = params => {
+                        var rowCellEditor = params.colDef.context.rowCellEditors[params.rowIndex];
+
+                        if (rowCellEditor === undefined || rowCellEditor === null)
+                            return {
+                                component: null // this prevents editing
+                            };
                         else
                             return {
                                 component: rowCellEditor.cellEditor,
                                 params: rowCellEditor.cellEditorParameters
                             };
                     }
-
-                    delete colDef.rowCellEditors;
                 }
             });
 
@@ -477,30 +495,183 @@ window.BlazorAgGrid = {
     }
 };
 
+class StringCheckboxCellRenderer {
+    init(params) {
+        this.eGui = document.createElement("span");
+
+        if (params.value !== "True" && params.value !== "False") {
+            this.eGui.textContent = "";
+            return;
+        }
+
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        //input.disabled = true; // rely on the colum def's isEditable
+        input.checked = params.value === "True";
+
+        this.eGui.appendChild(input);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    refresh(params) {
+        this.init(params);
+        return true;
+    }
+}
+
+class StringCheckboxCellEditor {
+    init(params) {
+        this.params = params;
+        this.eInput = document.createElement("input");
+        this.eInput.type = "checkbox";
+        this.eInput.checked = params.value === "True";
+
+        this.checkedHandler = this.checkedHandler.bind(this);
+        this.eInput.addEventListener('click', this.checkedHandler);
+    }
+
+    // trigger a refresh
+    checkedHandler(e) {
+        let checked = e.target.checked;
+        let colId = this.params.column.colId;
+        this.params.node.setDataValue(colId, checked ? 'True' : 'False');
+    }
+
+    getGui() {
+        return this.eInput;
+    }
+
+    afterGuiAttached() {
+        this.eInput.focus();
+    }
+
+    getValue() {
+        return this.eInput.checked ? "True" : "False";
+    }
+
+    isPopup() {
+        return false;
+    }
+
+    destroy(params) {
+        this.eInput.removeEventListener('click', this.checkedHandler);
+    }
+}
+
+// Combined renderer and editor (avoids the user having to double-click to enter edit mode)
 // see https://blog.ag-grid.com/binding-boolean-values-to-checkboxes-in-ag-grid/
-function CheckboxRenderer() { }
+class StringCheckboxCellCombinedRendererEditor {
 
-CheckboxRenderer.prototype.init = function (params) {
-    this.params = params;
+    init(params) {
+        this.params = params;
 
-    this.eGui = document.createElement('input');
-    this.eGui.type = 'checkbox';
-    this.eGui.checked = params.value === 'True';
+        var startRow = params?.colDef?.cellRendererParams ?? 0;
+        if (!params.node.rowIndex || params.node.rowIndex < startRow) {
+            this.eGui = document.createElement('div')
+            this.eGui.innerHTML = params.value || '';
+            return;
+        }
 
-    this.checkedHandler = this.checkedHandler.bind(this);
-    this.eGui.addEventListener('click', this.checkedHandler);
+        this.eGui = document.createElement('input');
+        this.eGui.type = 'checkbox';
+        this.eGui.checked = params.value === 'True';
+
+        if (params.isReadOnly) {
+            this.eGui.disabled = true;
+        }
+
+        this.checkedHandler = this.checkedHandler.bind(this);
+        this.eGui.addEventListener('click', this.checkedHandler);
+    }
+
+    checkedHandler(e) {
+        let checked = e.target.checked;
+        let colId = this.params.column.colId;
+        this.params.node.setDataValue(colId, checked ? 'True' : 'False');
+    }
+
+    getGui(params) {
+        return this.eGui;
+    }
+
+    destroy(params) {
+        this.eGui.removeEventListener('click', this.checkedHandler);
+    }
 }
 
-CheckboxRenderer.prototype.checkedHandler = function (e) {
-    let checked = e.target.checked;
-    let colId = this.params.column.colId;
-    this.params.node.setDataValue(colId, checked ? 'True' : 'False');
-}
+//class InteractiveSelectRenderer {
+//    init(params) {
+//        this.params = params;
+//        this.eGui = document.createElement('div');
+//        this.eGui.className = 'ag-cell-select-wrapper';
 
-CheckboxRenderer.prototype.getGui = function (params) {
-    return this.eGui;
-}
+//        // Create select element
+//        this.select = document.createElement('select');
+//        this.select.className = 'ag-cell-select';
 
-CheckboxRenderer.prototype.destroy = function (params) {
-    this.eGui.removeEventListener('click', this.checkedHandler);
-}
+//        // Get options from params
+//        const options = params.options || [];
+
+//        // Add options to select
+//        options.forEach(option => {
+//            const optElement = document.createElement('option');
+
+//            // Handle both object and primitive options
+//            if (typeof option === 'object') {
+//                optElement.value = option.value;
+//                optElement.text = option.label;
+//            } else {
+//                optElement.value = option;
+//                optElement.text = option;
+//            }
+
+//            this.select.appendChild(optElement);
+//        });
+
+//        // Set current value - by label
+//        this.select.value = params.value === '[Arr]' ? 'arr'
+//            : params.value === '[Dep]' ? 'dep'
+//            : '';
+
+//        // Handle change events
+//        this.select.addEventListener('change', this.onChange.bind(this));
+
+//        this.eGui.appendChild(this.select);
+//    }
+
+//    getGui() {
+//        return this.eGui;
+//    }
+
+//    onChange(event) {
+//        const newValue = event.target.value;
+
+//        // If you have a valueFormatter, use it
+//        const displayValue = this.params.column.getColDef().valueFormatter ?
+//            this.params.column.getColDef().valueFormatter({
+//                value: newValue,
+//                data: this.params.data
+//            }) :
+//            newValue;
+
+//        // Update the cell
+//        if (this.params.onValueChange) {
+//            this.params.onValueChange(newValue);
+//        }
+
+//        // Optional: Trigger grid refresh
+//        this.params.api.refreshCells({
+//            rowNodes: [this.params.node],
+//            columns: [this.params.column.getId()]
+//        });
+//    }
+
+//    // Optional: Cleanup
+//    destroy() {
+//        // Remove event listeners if needed
+//        this.select.removeEventListener('change', this.onChange);
+//    }
+//}
