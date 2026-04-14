@@ -315,6 +315,15 @@ window.BlazorAgGrid = {
                             };
                     }
                 }
+
+                // set individual cells as being non-editable if their row indexes are in nonEditableRowIndexes
+                if (typeof colDef.context.nonEditableRowIndexes !== 'undefined' && colDef.context.nonEditableRowIndexes !== null) {
+                    colDef.editable = (params) => !colDef.context.nonEditableRowIndexes.includes(params.node.rowIndex);
+
+                    colDef.cellClassRules = {
+                        'cell-read-only': (params) => colDef.context.nonEditableRowIndexes.includes(params.node.rowIndex)
+                    };
+                }
             });
 
             // following update to ag-grid v32, we need to update the grid options directly

@@ -187,6 +187,8 @@ namespace AgGrid.Blazor
         public Dictionary<int, RowCellRenderer> RowCellRenderers { get; set; }
 
         public Dictionary<int, RowCellEditor> RowCellEditors { get; set; }
+
+        public int[] NonEditableRowIndexes { get; set; }
     }
 
     public class RowCellRenderer
