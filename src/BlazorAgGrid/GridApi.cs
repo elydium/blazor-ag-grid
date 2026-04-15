@@ -280,6 +280,16 @@ namespace AgGrid.Blazor
             return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_setSelectedCell", _id, rowIndex, columnId).AsTask();
         }
 
+        /// <summary>
+        /// Ensure that the row with the specified index is visible to the user
+        /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public Task EnsureIndexVisible(int rowIndex)
+        {
+            return CallApi("ensureIndexVisible", rowIndex, "bottom");
+        }
+
         private Task CallApi(string name, params object[] args)
         {
             return _js.InvokeVoidAsync(CallGridApi, _id, name, args).AsTask();
