@@ -245,6 +245,7 @@ namespace AgGrid.Blazor
         {
             return CallApi("deselectAllFiltered");
         }
+
         /// <summary>
         /// Update the value of an individual cell
         /// </summary>
@@ -254,6 +255,18 @@ namespace AgGrid.Blazor
         /// <returns></returns>
         public Task SetCellValue(string rowNodeId, string columnId, object value)
         {
+            if (columnId == null || columnId.Length == 0)
+            {
+                Console.WriteLine("SetCellValue(): columnId is required");
+                return Task.CompletedTask;
+            }
+
+            if (value == null)
+            {
+                Console.WriteLine("SetCellValue(): null value has been set to an empty string");
+                value = "";
+            }
+
             return _js.InvokeVoidAsync("BlazorAgGrid.gridOptions_setCellValue", _id, rowNodeId, columnId, value).AsTask();
         }
 
@@ -265,6 +278,18 @@ namespace AgGrid.Blazor
         /// <returns></returns>
         public Task<object> GetCellValue(string rowNodeId, string columnId)
         {
+            if (rowNodeId == null || rowNodeId.Length == 0)
+            {
+                Console.WriteLine("GetCellValue(): rowNodeId is required");
+                return Task.FromResult<object>(null);
+            }
+
+            if (columnId == null || columnId.Length == 0)
+            {
+                Console.WriteLine("GetCellValue(): columnId is required");
+                return Task.FromResult<object>(null);
+            }
+
             return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_getCellValue", _id, rowNodeId, columnId).AsTask();
         }
 
@@ -277,6 +302,12 @@ namespace AgGrid.Blazor
         /// <returns></returns>
         public Task<object> SetSelectedCell(int rowIndex, string columnId)
         {
+            if (columnId == null || columnId.Length == 0)
+            {
+                Console.WriteLine("SetSelectedCell(): columnId is required");
+                return Task.FromResult<object>(null);
+            }
+
             return _js.InvokeAsync<object>("BlazorAgGrid.gridOptions_setSelectedCell", _id, rowIndex, columnId).AsTask();
         }
 
