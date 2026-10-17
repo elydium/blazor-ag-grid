@@ -353,3 +353,4 @@ MigrationBackup/
 _IGNORE
 _TMP
 *.js.map
+src/BlazorAgGrid/binci 2Debug/
